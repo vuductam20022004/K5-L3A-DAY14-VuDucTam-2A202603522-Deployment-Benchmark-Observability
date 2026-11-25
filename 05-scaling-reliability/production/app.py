@@ -35,7 +35,9 @@ from utils.mock_llm import ask
 try:
     import redis
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    _redis = redis.from_url(REDIS_URL, decode_responses=True)
+    _redis = redis.from_url(
+        REDIS_URL, decode_responses=True, socket_connect_timeout=1, socket_timeout=1,
+    )
     _redis.ping()
     USE_REDIS = True
     print("✅ Connected to Redis")

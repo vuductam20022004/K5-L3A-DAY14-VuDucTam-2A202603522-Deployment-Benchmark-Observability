@@ -1,0 +1,103 @@
+{
+  "dashboard": {
+    "time": "2026-11-25T23:15:17.4001175+07:00",
+    "avg": "0.23428546530722125",
+    "p95": "0.2935324570468112",
+    "traffic": "16.89059207105645",
+    "errors": "0.008639828591941803",
+    "inflight": "3",
+    "up": "3",
+    "instances": [
+      {
+        "instance": "172.20.0.4:8000",
+        "rps": "5.628867516588384"
+      },
+      {
+        "instance": "172.20.0.8:8000",
+        "rps": "5.703422053231939"
+      },
+      {
+        "instance": "172.20.0.9:8000",
+        "rps": "5.558302501236126"
+      }
+    ],
+    "tokens": [
+      {
+        "type": "input",
+        "rate": "1243.5098010652825"
+      },
+      {
+        "type": "output",
+        "rate": "663.4089308021543"
+      }
+    ]
+  },
+  "alerts": [
+    {
+      "name": "AgentInstanceDown",
+      "activeAt": "2026-11-25T15:56:17.401817116Z",
+      "firstSeen": "2026-11-25T22:56:53.2884663+07:00",
+      "seconds": 42.4,
+      "value": "0e+00"
+    },
+    {
+      "name": "AgentHighErrorRate",
+      "activeAt": "2026-11-25T16:16:22.401817116Z",
+      "firstSeen": "2026-11-25T23:17:24.9187058+07:00",
+      "seconds": 91.4,
+      "value": "2.04803170914325e-01"
+    },
+    {
+      "name": "AgentHighLatencyP95",
+      "activeAt": "2026-11-25T16:16:17.401817116Z",
+      "firstSeen": "2026-11-25T23:18:23.2896252+07:00",
+      "seconds": 149.7,
+      "value": "1.8995395938816997e+00"
+    }
+  ],
+  "traces": [
+    {
+      "traceId": "9c5bf7dfeaa12363ef9f2251f90ca5af",
+      "durationMs": 3556.31,
+      "span": "chat mock-llm-small",
+      "spanMs": 3537.08,
+      "spanPercent": 99.5,
+      "exception": null,
+      "matchedLog": {
+        "ts": "2026-11-25T16:16:14.235908+00:00",
+        "level": "INFO",
+        "service": "observable-agent",
+        "instance": "40cdca8f4479",
+        "event": "llm_call",
+        "trace_id": "9c5bf7dfeaa12363ef9f2251f90ca5af",
+        "span_id": "310da7bffe1509c7",
+        "request_id": "6a0a2f1068aa",
+        "model": "mock-llm-small",
+        "agent_version": "v2",
+        "input_tokens": 95,
+        "output_tokens": 55,
+        "cost_usd": 0.000047,
+        "llm_ms": 1695.5
+      }
+    },
+    {
+      "traceId": "f731a5ea0d7f824a99bc0c1a4fcbf12b",
+      "durationMs": 96.59,
+      "span": "chat mock-llm-small",
+      "spanMs": 71.78,
+      "spanPercent": 74.3,
+      "exception": "utils.mock_llm.LLMError",
+      "matchedLog": {
+        "ts": "2026-11-25T16:18:17.545549+00:00",
+        "level": "INFO",
+        "service": "observable-agent",
+        "instance": "6da0cf990561",
+        "event": "llm_error",
+        "trace_id": "f731a5ea0d7f824a99bc0c1a4fcbf12b",
+        "span_id": "3f803bfcb4381349",
+        "request_id": "beb7cddcd711",
+        "error": "Upstream LLM error: 503 Service Unavailable (mock)"
+      }
+    }
+  ]
+}
