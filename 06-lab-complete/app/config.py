@@ -1,25 +1,43 @@
-"""
-Config — 12-Factor: mọi cấu hình đọc từ biến môi trường.
-
-TODO (tiêu chí 9 — Config từ environment variables):
-  • Đọc các biến sau từ môi trường, có giá trị mặc định hợp lý khi chạy local:
-      PORT, ENVIRONMENT, AGENT_API_KEY, REDIS_URL,
-      RATE_LIMIT_PER_MINUTE, DAILY_BUDGET_USD (hoặc MONTHLY_BUDGET_USD)
-  • Không hard-code secret (API key thật, mật khẩu...) trong code.
-  • Liệt kê đủ các biến này trong .env.example.
-"""
+"""Read deploy-time settings from the environment."""
+import os
 from dataclasses import dataclass
+from decimal import Decimal
 
 
-@dataclass
+@dataclass(frozen=True)
 class Settings:
-    # TODO: thay các giá trị cố định bên dưới bằng giá trị đọc từ biến môi trường
-    port: int = 8000
-    environment: str = "development"
-    agent_api_key: str = ""
-    redis_url: str = ""
-    rate_limit_per_minute: int = 10
-    daily_budget_usd: float = 1.0
+    port: int
+    environment: str
+    agent_api_key: str
+    redis_url: str
+    rate_limit_per_minute: int
+    budget_period: str
+    budget_usd: Decimal
+
+    @classmethod
+    def from_environment(cls) -> "Settings":
+        port = int(os.getenv("PORT", "8000"))
+        if not 1 <= port <= 65535:
+            raise ValueError("PORT must be between 1 and 65535")
+
+        rate_limit = int(os.getenv("RATE_LIMIT_PER_MINUTE", "10"))
+        if rate_limit < 1:
+            raise ValueError("RATE_LIMIT_PER_MINUTE must be positive")
+
+        daily_budget = os.getenv("DAILY_BUDGET_USD", "").strip()
+        budget = Decimal(daily_budget or os.getenv("MONTHLY_BUDGET_USD") or "10")
+        if not budget.is_finite() or budget < 0:
+            raise ValueError("The configured budget must be finite and non-negative")
+
+        return cls(
+            port=port,
+            environment=os.getenv("ENVIRONMENT", "development"),
+            agent_api_key=os.getenv("AGENT_API_KEY", ""),
+            redis_url=os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0"),
+            rate_limit_per_minute=rate_limit,
+            budget_period="day" if daily_budget else "month",
+            budget_usd=budget,
+        )
 
 
-settings = Settings()
+settings = Settings.from_environment()
